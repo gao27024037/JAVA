@@ -6,7 +6,6 @@ import java.util.Arrays;
  * Created by gyl on 17-4-17.
  */
 public class EightPuzzle {
-    //9个数据
     private int[] num = new int[9];
 
     private int depth;
@@ -60,6 +59,7 @@ public class EightPuzzle {
         this.parent = parent;
     }
 
+    //F值 估值计算 由 当前节点到目标节点所需所有步数之和决定
     public void countFValue(EightPuzzle target) {
         int[][] length = {
                 {0,1,2,1,2,3,2,3,4},
@@ -71,24 +71,14 @@ public class EightPuzzle {
                 {2,3,4,1,2,3,0,1,2},
                 {3,2,3,2,1,2,1,0,1},
                 {4,3,2,3,2,1,2,1,0}};
-//        计算当前状态布局与目标布局不同的数码数
-//        int diffLocal = 0;
-//        for (int i = 0; i < 9; i++) {
-//            if (this.num[i] != 0) {
-//                if (this.num[i] != target.num[i]) {
-//                    diffLocal++;
-//                }
-//            }
-//        }
-//        Fvalue = diffLocal + depth;
         int step = 0;
-        int[] startstate = new int[9];//存 每个数字的位置 [i] = j 表示 数i的位置是j
+        int[] startstate = new int[9];//存  每个数字的位置  [i] = j 表示 数i的位置是j
         int[] targetstate = new int[9];
         for (int i = 0; i < 9; i++) {//把每个数的 位置 存入数组中
             startstate[this.num[i]] = i;
             targetstate[target.num[i]] = i;
         }
-        for (int i = 1; i < 9; i++) {
+        for (int i = 1; i < 9; i++) {//将数字i从 当前状态到目标状态所需步数  加和
             step += length[startstate[i]][targetstate[i]];
         }
         Fvalue = step + depth;
@@ -113,7 +103,7 @@ public class EightPuzzle {
         int reverse = 0; //逆序数 之和
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < i; j++) {
-                if (this.num[i] != 0) {
+                if (this.num[i] != 0) {//去掉0元素
                     if (this.num[j] > this.num[i]) {
                         reverse++;
                     }
@@ -181,6 +171,7 @@ public class EightPuzzle {
         }
     }
 
+    //获取路线中的 状态 ArrayList
     public ArrayList<int[]> printRoute() {
         ArrayList<int[]> route = new ArrayList<int[]>();
         EightPuzzle temp = this;

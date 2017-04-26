@@ -38,6 +38,9 @@ public class MainFrame extends JFrame {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    /**
+     * 由NetBeans完成
+     */
     private void initComponents() {
 
         jPanelInitial = new JPanel();
@@ -85,7 +88,7 @@ public class MainFrame extends JFrame {
         jPanelTimeConsuming = new JPanel();
         jTextFieldTimeConsuming = new JTextField();
 
-        addList();
+        addList();//将1-9相同元素放入ArrayList（JLable,JTextField）
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -123,6 +126,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+        //合并大量重复代码 用ForEach代替
         for (JTextField jTextField: listInit) {
             jTextField.setFont(new java.awt.Font("宋体", 0, 24)); // NOI18N
             jTextField.addFocusListener(new FocusAdapter() {
@@ -182,6 +186,7 @@ public class MainFrame extends JFrame {
         jPanelTarget.setBorder(BorderFactory.createTitledBorder("目标状态"));
         jPanelTarget.setPreferredSize(new java.awt.Dimension(100, 150));
 
+        //合并大量重复代码 用ForEach代替
         for (JTextField jTextField: listTarget) {
             jTextField.setFont(new java.awt.Font("宋体", 0, 24)); // NOI18N
             jTextField.addFocusListener(new FocusAdapter() {
@@ -463,6 +468,7 @@ public class MainFrame extends JFrame {
         );
 
         pack();
+        //将窗体设置在屏幕中间
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); //得到屏幕的尺寸
         setLocation(((screenSize.width-getWidth())/2), ((screenSize.height-getHeight())/2));
     }// </editor-fold>//GEN-END:initComponents
@@ -519,7 +525,7 @@ public class MainFrame extends JFrame {
     private void alert(JTextField jTextField) {
         if (!jTextField.getText().matches("[0-8]")) {
             JOptionPane.showMessageDialog(null, "请输入0-8的数字", "警告", JOptionPane.ERROR_MESSAGE);
-            jTextField.requestFocusInWindow();
+            jTextField.requestFocusInWindow();//输入不通过时焦点落回错误文本框
         }
     }
 
@@ -590,6 +596,7 @@ public class MainFrame extends JFrame {
             jTextAreaStep.append(s);
             jTextAreaStep.append("\n" + "---第 "+(step++)+" 步---" + "");
         }
+        //改变图案为初始状态
         for (int i = 0; i< 9; i++) {
             listDemonstrate.get(i).setIcon(new ImageIcon(getClass().getResource("/Pic/" + route.get(0)[i] + ".jpg"))); // NOI18N
         }
@@ -668,6 +675,7 @@ public class MainFrame extends JFrame {
         addNumberToField();
     }
 
+    //将数组数字加入Field
     private void addNumberToField() {
         int i = 0;
         for (JTextField init: listInit) {
@@ -731,8 +739,11 @@ public class MainFrame extends JFrame {
         });
     }
 
+    //可执行标签
     private boolean runFlag = true;
+    //Execute对象
     private Execute ex = new Execute();
+    //存路线
     private ArrayList<int[]> route = new ArrayList<int[]>();
     private int[] startnum = {0,8,7,6,5,4,3,2,1};
     private int[] targetnum = {1,2,3,4,5,6,7,8,0};
