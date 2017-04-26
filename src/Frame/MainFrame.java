@@ -515,6 +515,7 @@ public class MainFrame extends JFrame {
         route.clear();
     }
 
+    //显示提示框
     private void alert(JTextField jTextField) {
         if (!jTextField.getText().matches("[0-8]")) {
             JOptionPane.showMessageDialog(null, "请输入0-8的数字", "警告", JOptionPane.ERROR_MESSAGE);
