@@ -6,7 +6,12 @@ import java.util.*;
  * Created by gyl on 17-4-20.
  */
 public class Execute {
+    //扩展节点数
     public int nodeNumber;
+    private HashSet<Integer> nodes= new HashSet<Integer>();
+    private ArrayList<EightPuzzle> open = new ArrayList<EightPuzzle>();
+    private ArrayList<EightPuzzle> close = new ArrayList<EightPuzzle>();
+
     public int getNodeNumber() {
         return nodeNumber;
     }
@@ -15,10 +20,12 @@ public class Execute {
         this.nodeNumber = nodeNumber;
     }
 
-    private HashSet<Integer> nodes= new HashSet<Integer>();
-    private ArrayList<EightPuzzle> open = new ArrayList<EightPuzzle>();
-    private ArrayList<EightPuzzle> close = new ArrayList<EightPuzzle>();
-
+    /**
+     * 宽度优先算法
+     * @param start
+     * @param target
+     * @return
+     */
     public ArrayList<int[]> BreadthFirst(EightPuzzle start, EightPuzzle target) {
         //节点N
         EightPuzzle nodeN = new EightPuzzle();
@@ -38,11 +45,11 @@ public class Execute {
             for (Direction direction : Direction.values()) {
                 if (nodeN.couldMove(direction)) {
                     EightPuzzle temp = nodeN.move(direction);
-                    //如果该节点已存在，则跳过该节点
+                    //如果该节点已存在过，则跳过该节点
                     if (nodes.add(temp.getCode())) {
                         if (temp.isTarget(target)) {
                             System.out.println("Success, the route is below:");
-                            return temp.printRoute();
+                            return temp.printRoute();//返回存有路线上所有节点的ArrayList
                         } else {
                             open.add(temp);
                         }
@@ -54,9 +61,18 @@ public class Execute {
         return null;
     }
 
+    /**
+     * 深度优先算法
+     * @param start
+     * @param target
+     * @return
+     */
     public ArrayList<int[]> DepthFirst(EightPuzzle start, EightPuzzle target) {
+        //存取可扩展节点
         ArrayList<EightPuzzle> extend = new ArrayList<EightPuzzle>();
+        //存在当前界中 存在的目标节点 用于后来比较
         ArrayList<EightPuzzle> R = new ArrayList<EightPuzzle>();
+        //设置初始深度和 深度增加值
         int depthMax = 4;
         int detDeth = 8;
         EightPuzzle nodeN = new EightPuzzle();
@@ -70,16 +86,16 @@ public class Execute {
             if (nodeN.getDepth() > depthMax) {
                 extend.add(nodeN);
             } else {
-                System.out.print("###第 "+(nodeNumber++)+" 个节点扩展###");
-                System.out.println(" 第 "+nodeN.getDepth()+" 层###");
+                System.out.print("###第 "+(nodeNumber++)+" 个节点扩展###第 "+nodeN.getDepth()+" 层###");
                 //判断节点N能否扩展 并把扩展后的节点放入OPEN表
                 for (Direction direction : Direction.values()) {
                     if (nodeN.couldMove(direction)) {
                         EightPuzzle temp = nodeN.move(direction);
                         if (nodes.add(temp.getCode())) {
                             if (temp.isTarget(target)) {
+                                //如果就是目标节点  放入R列表中 且最大深度值变为该目标节点的深度
                                 depthMax = temp.getDepth();
-                                R.add(temp);
+                                R.add(0,temp);
                                 nodes.remove(temp);
                             } else {
                                 open.add(0, temp);
@@ -92,11 +108,11 @@ public class Execute {
             if (open.isEmpty()) {
                 if (!R.isEmpty()) {
                     System.out.println("Success, the route is below:");
-                    return R.get(0).printRoute();
+                    return R.get(0).printRoute();//第一个解必定是深度最短的
                 } else if (open.addAll(extend)) {
                     extend.clear();
                     depthMax += detDeth;
-                    detDeth = detDeth / 2 + 1;
+                    detDeth = detDeth / 2 + 1;//深度变化值减半+1，到后面逐渐向宽度优先靠近
                 } else {
                     System.out.println("failed, there is no any node in OPEN or EXTEND");
                     return null;
@@ -106,6 +122,12 @@ public class Execute {
         return null;
     }
 
+    /**
+     * A*算法
+     * @param start
+     * @param target
+     * @return
+     */
     public ArrayList<int[]> AStar(EightPuzzle start, EightPuzzle target) {
         ArrayList<EightPuzzle> sonsOfN = new ArrayList<EightPuzzle>();
         EightPuzzle nodeN = new EightPuzzle();
@@ -116,15 +138,14 @@ public class Execute {
         nodeNumber = 0;
         while(!open.isEmpty()) {
             close.add(open.get(0));
-            nodes.add(open.get(0).getCode());
+            nodes.add(open.get(0).getCode());//将CLOSE表中元素仍入哈希表
             nodeN = open.remove(0);
-            System.out.print("###第 " + (nodeNumber++) + " 个节点扩展###");
-            System.out.println(" 第 " + nodeN.getDepth() + " 层###");
-            //判断节点N能否扩展 并把扩展后的节点放入OPEN表 同时筛出自身为父辈节点的情况
+            System.out.print("###第 " + (nodeNumber++) + " 个节点扩展###第 " + nodeN.getDepth() + " 层###");
+            //判断节点N能否扩展 并把扩展后的节点放入OPEN表
             for (Direction direction : Direction.values()) {
                 if (nodeN.couldMove(direction)) {
                     EightPuzzle temp = nodeN.move(direction);
-                    if (!nodes.contains(temp.getCode())) {//如果
+                    if (!nodes.contains(temp.getCode())) {//如果不在CLOSE中
                         if (temp.isTarget(target)) {
                             System.out.println("Success, the route is below:");
                             return temp.printRoute();
@@ -135,10 +156,12 @@ public class Execute {
                     }
                 }
             }
+            //若有节点，则放入OPEN表中
             if (sonsOfN.size() >= 1) {
                 open.addAll(sonsOfN);
                 sonsOfN.clear();
             }
+            //对OPEN表排序
             Collections.sort(open, new Comparator<EightPuzzle>() {
                 @Override
                 public int compare(EightPuzzle o1, EightPuzzle o2) {
