@@ -27,6 +27,7 @@ public class MainFrame extends JFrame {
      * Creates new form NewUI2
      */
     public MainFrame() {
+        setTitle("八数码问题演示");
         initComponents();
     }
 
