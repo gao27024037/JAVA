@@ -1,6 +1,5 @@
 package algorithm;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by gyl on 17-4-17.
@@ -26,31 +25,15 @@ public class EightPuzzle {
         return depth;
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
     public int getFvalue() {
         return Fvalue;
-    }
-
-    public void setFvalue(int fvalue) {
-        Fvalue = fvalue;
     }
 
     public EightPuzzle getParent() {
         return parent;
     }
 
-    public void setParent(EightPuzzle parent) {
-        this.parent = parent;
-    }
-
     public EightPuzzle() {
-    }
-
-    public EightPuzzle(int[] num) {
-        this.num = num;
     }
 
     public EightPuzzle(int[] num, EightPuzzle parent, int depth) {
